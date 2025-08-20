@@ -1,0 +1,101 @@
+.book-detail {
+  padding: 30px;
+  // background-color: #ddd;
+  &__right {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 30px;
+  }
+  &__author {
+    margin-bottom: 10px;
+    span:nth-child(2) {
+      color: rgb(39, 86, 239);
+      display: inline-block;
+      margin-left: 5px;
+    }
+  }
+  &__text {
+    font-weight: 400;
+    margin: 0;
+    margin-bottom: 5px;
+  }
+  &__rate {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    ul {
+      margin-right: 20px;
+    }
+  }
+  &__price {
+    background-color: #f5f4f4;
+    padding: 20px 30px;
+    font-size: 32px;
+    color: rgb(255, 74, 3);
+    font-weight: 600;
+    border-radius: 4px;
+  }
+  &__ship {
+    margin-top: 30px;
+    span:nth-child(2) {
+      display: inline-block;
+      margin-left: 20px;
+    }
+  }
+  &__quantity {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    span:nth-child(1) {
+      margin-right: 20px;
+    }
+    div {
+      display: flex;
+    }
+    &--sp {
+      margin-left: 20px;
+      color: #777777;
+    }
+  }
+  &__input {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ddd;
+    padding: 2px 20px;
+    font-size: 16px;
+    width: 100px;
+    border-radius: 0;
+  }
+  &__button {
+    display: flex;
+    margin-top: 20px;
+    gap: 10px;
+    &--btn {
+      width: 40px;
+      margin: 0;
+      padding: 0;
+      border-radius: 0;
+      svg {
+        width: 15px !important;
+        height: 15px !important;
+      }
+    }
+    &--btn1 {
+      background-color: rgba(255, 87, 34, 0.1);
+      border: 1px solid #ee4d2d;
+      color: #ee4d2d;
+      padding: 10px 20px;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+    &--btn2 {
+      background-color: #ee4d2d;
+      border: 1px solid rgba(255, 87, 34, 0.1);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+  }
+}

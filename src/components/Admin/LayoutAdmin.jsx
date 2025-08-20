@@ -1,4 +1,4 @@
-import { Col, Dropdown, Layout, Menu, message, Row, Space } from "antd";
+import { Avatar, Col, Dropdown, Layout, Menu, message, Row, Space } from "antd";
 const { Content, Footer, Sider } = Layout;
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -50,7 +50,7 @@ const LayoutAdmin = () => {
       icon: <FaRegUser />,
       children: [
         {
-          label: "CRUD",
+          label: <Link to="/admin/user">CRUD</Link>,
           key: "crud",
           icon: <UserOutlined />,
         },
@@ -75,19 +75,20 @@ const LayoutAdmin = () => {
 
   const items = [
     {
-      key: "sub1",
-      label: "Quản lí tài khoản",
-      // icon: <FaUserCog />,
-      children: [
-        { key: "1", label: "Option 1" },
-        { key: "2", label: "Option 2" },
-        { key: "3", label: "Option 3" },
-        { key: "4", label: "Option 4" },
-      ],
+      key: "manage",
+      label: <label style={{ cursor: "pointer" }}>Quản lý tài khoản</label>,
+    },
+    {
+      label: <Link to="/">Trang chủ</Link>,
+      key: "home",
     },
     {
       key: "logout",
-      label: <div onClick={handleLogout}>Đăng xuất</div>,
+      label: (
+        <label style={{ cursor: "pointer" }} onClick={handleLogout}>
+          Đăng xuất
+        </label>
+      ),
       icon: <IoLogOutOutline />,
     },
   ];
@@ -95,6 +96,9 @@ const LayoutAdmin = () => {
   const user = useSelector((state) => state.account.user);
   const role = user.role;
   const fullName = user.fullName;
+  const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${
+    user?.avatar
+  }`;
   return (
     <Layout style={{ minHeight: "100vh" }}>
       {role == "ADMIN" && (
@@ -143,7 +147,8 @@ const LayoutAdmin = () => {
                 <Dropdown menu={{ items }}>
                   <a onClick={(e) => e.preventDefault()}>
                     <Space>
-                      <span> Xin chào {fullName}</span>
+                      <Avatar src={urlAvatar} />
+                      {fullName}
                     </Space>
                   </a>
                 </Dropdown>

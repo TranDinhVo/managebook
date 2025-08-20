@@ -16,6 +16,9 @@ import NotFound from "./components/NotFound/index";
 import AdminPage from "./pages/admin";
 import ProtectedRoute from "./components/ProtectedRoute";
 import LayoutAdmin from "./components/Admin/LayoutAdmin";
+import UserTable from "./components/Admin/User/UserTable";
+import BookTable from "./components/Admin/Book/BookTable";
+import OrderPage from "./pages/order";
 
 const Layout = () => {
   return (
@@ -25,7 +28,7 @@ const Layout = () => {
         style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
       >
         <Header />
-        <div style={{ flex: "1", overflow: "auto" }}>
+        <div style={{ flex: "1" }}>
           <Outlet />
         </div>
         <Footer />
@@ -48,8 +51,12 @@ let router = createBrowserRouter([
         element: <ContactPage />,
       },
       {
-        path: "book",
+        path: "book/:id",
         element: <BookPage />,
+      },
+      {
+        path: "/order",
+        element: <OrderPage />,
       },
     ],
   },
@@ -72,11 +79,11 @@ let router = createBrowserRouter([
       },
       {
         path: "user",
-        element: <ContactPage />,
+        element: <UserTable />,
       },
       {
         path: "book",
-        element: <BookPage />,
+        element: <BookTable />,
       },
     ],
   },
@@ -95,8 +102,7 @@ export default function App() {
   const getAccount = async () => {
     if (
       window.location.pathname === "/login" ||
-      window.location.pathname === "/register" ||
-      window.location.pathname === "/"
+      window.location.pathname === "/register"
     )
       return;
     const res = await callFetchAccount();

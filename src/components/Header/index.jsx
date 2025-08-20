@@ -1,11 +1,14 @@
 import {
+  Avatar,
   Badge,
+  Button,
   Col,
   Drawer,
   Dropdown,
   Input,
   Menu,
   message,
+  Popover,
   Row,
   Space,
 } from "antd";
@@ -17,15 +20,25 @@ import { FaUserCog } from "react-icons/fa";
 import { IoLogOutOutline } from "react-icons/io5";
 import "../../assets/styles/header.scss";
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { callLogout } from "../../services/api.service";
 import { doLogoutAction } from "../../redux/account/accountSlice";
+
 const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [openBar, setOpenBar] = useState(false);
   const [current, setCurrent] = useState("1");
+  const carts = useSelector((state) => state.order.carts);
+
+  const isAuthenticated = useSelector((state) => state.account.isAuthenticated);
+  const user = useSelector((state) => state.account.user);
+  const fullName = user.fullName;
+  const urlAvatar = `${import.meta.env.VITE_BACKEND_URL}/images/avatar/${
+    user?.avatar
+  }`;
+
   const handleLogout = async () => {
     const res = await callLogout();
     if (res && res?.data) {
@@ -37,24 +50,70 @@ const Header = () => {
   const items = [
     {
       key: "sub1",
-      label: "Quản lí tài khoản",
-      // icon: <FaUserCog />,
-      children: [
-        { key: "1", label: "Option 1" },
-        { key: "2", label: "Option 2" },
-        { key: "3", label: "Option 3" },
-        { key: "4", label: "Option 4" },
-      ],
+      label: <label style={{ cursor: "pointer" }}>Quản lý tài khoản</label>,
     },
     {
       key: "logout",
-      label: <div onClick={handleLogout}>Đăng xuất</div>,
+      label: (
+        <label style={{ cursor: "pointer" }} onClick={handleLogout}>
+          Đăng xuất
+        </label>
+      ),
       icon: <IoLogOutOutline />,
     },
   ];
-  const isAuthenticated = useSelector((state) => state.account.isAuthenticated);
-  const user = useSelector((state) => state.account.user);
-  const fullName = user.fullName;
+  if (user?.role === "ADMIN") {
+    items.unshift({
+      label: <Link to="/admin">Trang quản trị</Link>,
+      key: "admin",
+    });
+  }
+  const contentCarts = () => {
+    return (
+      <>
+        {carts && (
+          <>
+            <div className="popover-carts">
+              {carts.map((item) => {
+                return (
+                  <div className="popover-carts__item" key={item._id}>
+                    <div className="popover-carts__item--left">
+                      <div className="popover-carts__image">
+                        <img
+                          src={`${
+                            import.meta.env.VITE_BACKEND_URL
+                          }/images/book/${item.detail.thumbnail}`}
+                          alt={`${item.detail.mainText}`}
+                        />
+                      </div>
+                      <div className="popover-carts__name">
+                        {item.detail.mainText}
+                      </div>
+                    </div>
+                    <div className="popover-carts__price">
+                      {new Intl.NumberFormat("vi-VN", {
+                        style: "currency",
+                        currency: "VND",
+                      }).format(item.detail.price ?? 0)}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="popover-carts__footer">
+              <div>a</div>
+              <Button
+                className="popover-carts__button--btn2"
+                onClick={() => navigate("/order")}
+              >
+                Xem giỏ hàng
+              </Button>
+            </div>
+          </>
+        )}
+      </>
+    );
+  };
   return (
     <>
       <Row className="header" gutter={[20, 20]}>
@@ -76,8 +135,8 @@ const Header = () => {
             <Dropdown menu={{ items }}>
               <a onClick={(e) => e.preventDefault()}>
                 <Space>
-                  <span> Xin chào {fullName}</span>
-                  {/* <DownOutlined /> */}
+                  <Avatar src={urlAvatar} />
+                  {fullName}
                 </Space>
               </a>
             </Dropdown>
@@ -86,9 +145,15 @@ const Header = () => {
           )}
         </Col>
         <Col className="header__shop" xs={4} sm={3} md={2} lg={2}>
-          <Badge count={5} size="middle">
-            <AiOutlineShoppingCart size={30} color="#2abce9" />
-          </Badge>
+          <Popover
+            placement="bottomRight"
+            title="Sản phẩm mới thêm"
+            content={contentCarts}
+          >
+            <Badge count={carts?.length ?? 0} size="middle" showZero>
+              <AiOutlineShoppingCart size={30} color="#2abce9" />
+            </Badge>
+          </Popover>
         </Col>
       </Row>
       <Drawer
